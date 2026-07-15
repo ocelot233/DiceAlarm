@@ -1,0 +1,8 @@
+alarm_title: "闹钟"
+alarm_add_success: "{alarm_title}设置完成"
+alarm_del_cptn_success: "已删除主提醒位置"
+alarm_del_cptn2_success: "已删除附加提醒位置"
+alarm_custom_redefault: "已恢复默认提醒词"
+alarm_edit_success: "修改完成"
+alarm_list_empty: "你还没有闹钟呢，快去设置一个吧"
+alarm_delete_success: "操作完成"

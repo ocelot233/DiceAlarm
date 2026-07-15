@@ -1,6 +1,6 @@
 local item,rest = "",string.match(msg.fromMsg,"^[%s]*(.-)[%s]*$",#"添加闹钟"+1)
 if(rest == "")then
-return "请输入参数"
+return "{alarm_para_empty}"
 end
 local items = {}
 repeat
@@ -11,43 +11,73 @@ until(rest=="")
 list = getUserConf(getDiceQQ(),"闹钟",{})
 ulist = getUserConf(msg.uid,"alarms",{})
 time = {}
+errp = ""
+
+function errPrompt(item,num,str)
+    fstr = "{alarm_add_err_head}[添加闹钟 "
+    if(num == -1)then
+        for i=1,#item do
+            fstr = fstr..item[i].." "
+        end
+        return fstr.."<- "..str
+    else
+        for i=1,num-1 do
+            fstr = fstr..item[i].." "
+        end
+        return fstr.." ->"..item[num].."<- ]"..str
+    end
+
+end
+
+--items[] be like:{仅一次/每天/周W[1-7],(d天后),hh时,mm分}
 for i = 2,#items do
     if(string.find(items[i],"天后") ~= nil)then
         time.day = tonumber(string.match(items[i], "%d+"))
+        if not time.day then
+            errp = errPrompt(items,i,"{alarm_check_day_err}")
+        end
     elseif(string.find(items[i],"时") ~= nil)then
         time.hour = tonumber(string.match(items[i], "%d+"))
+        if not time.hour or time.hour < 0 or time.hour > 23 then
+            errp = errPrompt(items,i,"{alarm_check_hour_err}")
+            time.hour = 0
+        end
     elseif(string.find(items[i],"分")~= nil)then
         time.min = tonumber(string.match(items[i], "%d+"))
+        if not time.min or time.min < 0 or time.min > 59 then
+            errp = errPrompt(items,i,"{alarm_check_min_err}")
+            time.min = 0
+        end
     end
 end
-if(time.hour == nil or time.min == nil)then
-    return "时间输入错误"
+if(time.hour == nil)then
+    errp = errPrompt(items,-1,"{alarm_check_hour_not_found}")
 end
 if(items[1] == "仅一次")then
     thisalarm = {
         state = -1,
         waitday = time.day or 0,
         hour = time.hour,
-        min = time.min,
+        min = time.min or 0,
         gid = msg.gid,
         uid = msg.uid
     }
-elseif(items[1] == "每天")then
+elseif(items[1] == "每天" or items[1] == "每日")then
     thisalarm = {
         state = 1,
         waitday = 0,
         hour = time.hour,
-        min = time.min,
+        min = time.min or 0,
         gid = msg.gid,
         uid = msg.uid
     }
 else
     if(string.find(items[1],"周") == nil)then
-        return "触发类型错误"
+        return errPrompt(items,1,"{alarm_check_type_not_found}")
     end
     rest = string.match(items[1],"%d+")
     if(rest == nil)then
-        return "每周几请用阿拉伯数字并不带空格"
+        return errPrompt(items,1,"{alarm_check_week_err}")
     end
     local weeks = {}
         rest = tonumber(rest)
@@ -87,11 +117,14 @@ else
         state = 0,
         waitday = 0,
         hour = time.hour,
-        min = time.min,
+        min = time.min or 0,
         wdays = weeks,
         gid = msg.gid,
         uid = msg.uid
     }
+end
+if #errp > 0 then
+    return errp
 end
 table.insert(ulist, thisalarm)
 isin = false
@@ -106,4 +139,4 @@ if(not isin)then
 end
 setUserConf(getDiceQQ(),"闹钟",list)
 setUserConf(msg.uid,"alarms",ulist)
-return "闹钟设置完成"
+return "{alarm_add_success}"
