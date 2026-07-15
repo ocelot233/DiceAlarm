@@ -1,8 +1,14 @@
 function sendAlarm(alarm,i)
+    usermsg = "你设置的的"..i.."闹钟到时间了哟"
+    groupmsg = "[CQ:at,qq="..alarm.uid.."]你设置的的"..i.."闹钟到时间了哟"
+    if(alarm.msg ~= nil)then
+        usermsg = alarm.msg
+        groupmsg = "[CQ:at,qq="..alarm.uid.."]"..alarm.msg
+    end
     if(not alarm.gid)then
-        sendMsg("你设置的的"..i.."闹钟到时间了哟", nil, alarm.uid)
+        sendMsg(usermsg, nil, alarm.uid)
     else
-        sendMsg("[CQ:at,qq="..alarm.uid.."]你设置的的"..i.."闹钟到时间了哟", alarm.gid)
+        sendMsg(groupmsg, alarm.gid)
     end
 end
 list = getUserConf(getDiceQQ(),"闹钟",{})

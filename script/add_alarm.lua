@@ -55,7 +55,7 @@ else
         item = rest%10
         rest = math.modf(rest/10)
         if(item>7 or item<1)then
-            goto a
+            goto continue
         end
         if(item < 7)then
             item = item + 1
@@ -63,7 +63,7 @@ else
             item = 1
         end
         table.insert(weeks, item)
-        ::a::
+        ::continue::
     until(rest == 0)
     Cweek = {7,1,2,3,4,5,6}
     for i = 1,#weeks do

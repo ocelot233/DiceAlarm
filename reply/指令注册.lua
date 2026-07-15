@@ -31,3 +31,14 @@ msg_reply.alarm_show = {
     lua = "show_alarm"
   }
 }
+msg_reply.alarm_edit = {
+  keyword = {
+    prefix = "修改闹钟"
+  },
+  limit = {
+    cd = { user = 3 },
+  },
+  echo = {
+    lua = "edit_alarm"
+  }
+}

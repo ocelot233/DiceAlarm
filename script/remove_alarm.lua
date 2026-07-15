@@ -1,4 +1,4 @@
-num = tonumber(string.match(msg.fromMsg,"^[%s]*(.-)[%s]*$",#"删除闹钟"+1))
+num = tonumber(string.match(msg.fromMsg,"%d+",#"删除闹钟"+1))
 ulist = getUserConf(msg.uid,"alarms",{})
 if(num == nil)then
     return"请输入编号"

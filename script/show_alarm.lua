@@ -16,6 +16,9 @@ while(j <= #ulist)do
             "仅响一次",
             ulist[j].waitday.."天后"..ulist[j].hour.."时"..ulist[j].min.."分在"..where.."提醒"
         }
+        if(ulist[j].msg ~= nil)then
+            table.insert(alarm,"提醒词："..ulist[j].msg)
+        end
         table.insert(alarms, table.concat (alarm, "\n"))
     elseif(ulist[j].state == 1)then
         alarm = {
@@ -23,6 +26,9 @@ while(j <= #ulist)do
             "每日",
             ulist[j].hour.."时"..ulist[j].min.."分在"..where.."提醒"
         }
+        if(ulist[j].msg ~= nil)then
+            table.insert(alarm,"提醒词："..ulist[j].msg)
+        end
         table.insert(alarms, table.concat (alarm, "\n"))
     elseif(ulist[j].state == 0)then
         weeks = ""
@@ -35,6 +41,9 @@ while(j <= #ulist)do
             "每周"..weeks,
             ulist[j].hour.."时"..ulist[j].min.."分在"..where.."提醒"
         }
+        if(ulist[j].msg ~= nil)then
+            table.insert(alarm,"提醒词："..ulist[j].msg)
+        end
         table.insert(alarms, table.concat (alarm, "\n"))
     end
     j=j+1
